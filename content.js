@@ -8,6 +8,11 @@
  * To make it work, "storage" will need to added as a permission in manifest.json.
  */
 
+//Click on the "Purdue Account Login" button
+if (window.location.href.indexOf("https://mycourses.purdue.edu") !== -1) {
+     $("tr.purdue-btn-top-row").click();
+}
+
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
 if (window.location.href.indexOf("https://www.purdue.edu/apps/account/cas/login") !== -1) {
     //Retrieve everything from localStorage.
