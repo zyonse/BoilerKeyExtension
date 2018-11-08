@@ -1,6 +1,11 @@
 /*
-A Chrome Extension that authenticates through Purdue's CAS automatically,
-alleviating BoilerKey for the device it's installed on.
+ * @author Ben Scholer <benscholer3248511@gmail.com>
+ *
+ * A Chrome Extension that authenticates through Purdue's CAS automatically,
+ * alleviating BoilerKey for the device it's installed on.
+ *
+ * The code to make this work with Chrome Sync is commented out in the get/set functions.
+ * To make it work, "storage" will need to added as a permission in manifest.json.
  */
 
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
@@ -17,15 +22,12 @@ if (window.location.href.indexOf("https://www.purdue.edu/apps/account/cas/login"
         hmacCode = generateHmacCode(hotpSecret);
         //If we have the username/pin, log the user in automatically.
         if (username && pin) {
-            //Autofill username field
+            //Auto-fill username field
             $("#username").val(username);
-            //Autofill password field
+            //Auto-fill password field
             $("#password").val(pin + "," + hmacCode);
             //Find the login button, and click it.
             $("input[name='submit'][accesskey='s'][value='Login'][tabindex='3'][type='submit']").click();
-            $("#password").trigger(
-                jQuery.Event('keydown', {which: 13})
-            );
             //Otherwise, just show the user the password they should use in an alert.
         } else if (pin && !username) {
             alert("Password: " + pin + "," + hmacCode);
@@ -53,11 +55,27 @@ function get(key) {
             return data;
         } else return null;
     } else return null;
+    //To do this with Chrome Sync, the following code should be used instead.
+    //This code probably won't work properly without some modification.
+    /*
+    let ret;
+    chrome.storage.sync.get(key, function (data) {
+        ret = data;
+    });
+    return ret;
+     */
 }
 
 //A simple wrapper for localStorage.set(key, value)
 function set(key, value) {
     localStorage.setItem(key, value);
+    //To do this with Chrome Sync, the following code should be used instead.
+    //This code probably won't work properly without some modification.
+    /*
+    chrome.storage.sync.set({key: value}, function () {
+        //Saving successful
+    });
+    */
 }
 
 //The function that runs during setup, returning the hotp-secret needed to create auth keys from.
