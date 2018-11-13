@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "BoilerKey Helper",
-  "description": "A Chrome/Firefox Extension that authenticates through Purdue's CAS automatically, alleviating BoilerKey for the device it's installed on.",
+  "description": "A Chrome/Firefox Extension that alleviates BoilerKey for the device it's installed on.",
   "author": "Ben Scholer",
   "version": "1.2",
   "icons": {
