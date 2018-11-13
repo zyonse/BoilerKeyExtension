@@ -3,7 +3,6 @@
  *
  * A Chrome Extension that authenticates through Purdue's CAS automatically,
  * alleviating BoilerKey for the device it's installed on.
- *
  */
 
 //Click on the "Purdue Account Login" button
