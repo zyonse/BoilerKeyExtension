@@ -1,32 +1,31 @@
 {
-	"manifest_version": 2,
-	"name": "BoilerKey Helper",
-	"description": "An extension that alleviates Purdue's BoilerKey 2 factor authentication.",
-	"author": "Ben Scholer",
-	"version": "1.2",
-	"icons": {
-		"16": "icons/icon16.png",
-		"48": "icons/icon48.png",
-		"128": "icons/icon128.png"
-	},
-	"content_scripts": [
-		{
-			"matches": [
-				"<all_urls>"
-	  ],
-	  "js": [
-		  "jquery-3.3.1.min.js",
-		  "jsOTP.min.js",
-		  "base32.min.js",
-		  "content.js"
-	  ]
-		}
-	],
-	"browser_action": {
-		"default_icon": "icons/icon128.png"
-	},
-	"permissions": [
-		"activeTab",
-		"http://*.purdue.edu/"
-	]
+  "manifest_version": 2,
+  "name": "BoilerKey Helper",
+  "description": "An extension that alleviates Purdue's BoilerKey 2 factor authentication.",
+  "author": "Ben Scholer",
+  "version": "1.3",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "jquery-3.3.1.min.js",
+        "jsOTP.min.js",
+        "base32.min.js",
+        "content.js"
+      ]
+    }
+  ],
+  "browser_action": {
+    "default_icon": "icons/icon128.png"
+  },
+  "permissions": [
+    "http://*.purdue.edu/"
+  ]
 }

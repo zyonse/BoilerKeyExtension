@@ -7,7 +7,7 @@
 
 //Click on the "Purdue Account Login" button
 if (window.location.href.indexOf("https://mycourses.purdue.edu") !== -1) {
-     $("tr.purdue-btn-top-row").click();
+    $("tr.purdue-btn-top-row").click();
 }
 
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
@@ -109,10 +109,10 @@ function askForInfo() {
     let code, pin, username, hotpSecret;
     //Traps user until they enter a valid activation link, or code.
     while (!code) {
-        let link = prompt("Note: This process will have to be repeated on additional computers, and the traditional pin,push combo will work normally.\n" +
+        let link = prompt("Note: This process will have to be repeated on additional computers, and the traditional pin,push combo will still work normally.\n" +
             "Setup steps:\n" +
             "1) In a different browser, please navigate to your BoilerKey settings (https://purdue.edu/boilerkey), and click 'Set up a new Duo Mobile BoilerKey'.\n" +
-            "2) Enter PIN, and choose name for the new BoilerKey e.g. 'Chrome'\n" +
+            "2) Follow the steps, enter PIN, and choose name for the new BoilerKey e.g. 'Chrome', 'Firefox'\n" +
             "3) Paste the link (https://m-1b9bef70.duosecurity.com/activate/XXXXXXXXXXXXXXXXXXXX) found under the QR code (required):");
         code = validateLink(link);
         if (!code) {
