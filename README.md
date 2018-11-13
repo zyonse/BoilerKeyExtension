@@ -17,4 +17,4 @@ This is a Chrome/Firefox/Opera extension that circumvents BoilerKey. The code is
 5. Navigate to the [Blackboard login page](https://mycourses.purdue.edu), and follow the instructions in the dialogs.
 
 ### Opera Installation Instructions
-Install instructions for Opera or not available, but please feel free to add them and make a pull request!
+Install instructions for Opera are not available, but feel free to fork, add them, and make a pull request!
