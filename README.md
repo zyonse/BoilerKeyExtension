@@ -1,8 +1,20 @@
-# BoilerKeyExtension
-This is a Chrome/Firefox extension that circumvents BoilerKey.  The code is based heavily off of [u/elnardu](https://www.reddit.com/r/Purdue/comments/9ulfj2/local_boilerkey_script/)'s [python script](https://github.com/elnardu/local-boilerkey).
+# BoilerKey Extension
+This is a Chrome/Firefox/Opera extension that circumvents BoilerKey. The code is based heavily off of [u/elnardu](https://www.reddit.com/r/Purdue/comments/9ulfj2/local_boilerkey_script/)'s [Python script](https://github.com/elnardu/local-boilerkey).
 
-### Chrome Installation Instruction
-To install, navigate to chrome://extensions in Google Chrome, enable developer options, click "Load unpacked", and select this project's directory. After that, navigate to Purdue's CAS login page, and follow the instructions for the first-time setup.
+### Chrome Installation Instructions
+1. Clone the extension.
+2. Navigate to chrome://extensions in Google Chrome.
+3. Enable Developer mode in the top right corner.
+4. Click "Load unpacked".
+5. Select the BoilerKeyExtension folder which you cloned.
+6. Navigate to the [Blackboard login page](https://mycourses.purdue.edu), and follow the instructions in the dialogs.
 
-### Firefox Installation Instruction
-To install, navigate to about:debugging in Mozilla Firefox, and click "Load Temporary Add-on", and select this project's manifest.json. After that, navigate to Purdue's CAS login page, and follow the instructions for the first-time setup.
+### Firefox Installation Instructions
+1. Clone the extension.
+2. Navigate to about:debugging in Mozilla Firefox.
+3. Click "Load Temporary Add-on".
+4. Select the manifest.json file from the cloned folder.
+5. Navigate to the [Blackboard login page](https://mycourses.purdue.edu), and follow the instructions in the dialogs.
+
+### Opera Installation Instructions
+Install instructions for Opera or not available, but please feel free to add them and make a pull request!
