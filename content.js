@@ -4,8 +4,6 @@
  * A Chrome Extension that authenticates through Purdue's CAS automatically,
  * alleviating BoilerKey for the device it's installed on.
  *
- * The code to make this work with Chrome Sync is commented out in the get/set functions.
- * To make it work, "storage" will need to added as a permission in manifest.json.
  */
 
 //Click on the "Purdue Account Login" button
@@ -60,27 +58,11 @@ function get(key) {
             return data;
         } else return null;
     } else return null;
-    //To do this with Chrome Sync, the following code should be used instead.
-    //This code probably won't work properly without some modification.
-    /*
-    let ret;
-    chrome.storage.sync.get(key, function (data) {
-        ret = data;
-    });
-    return ret;
-     */
 }
 
 //A simple wrapper for localStorage.set(key, value)
 function set(key, value) {
     localStorage.setItem(key, value);
-    //To do this with Chrome Sync, the following code should be used instead.
-    //This code probably won't work properly without some modification.
-    /*
-    chrome.storage.sync.set({key: value}, function () {
-        //Saving successful
-    });
-    */
 }
 
 //The function that runs during setup, returning the hotp-secret needed to create auth keys from.
