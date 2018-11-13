@@ -26,6 +26,6 @@
     "default_icon": "icons/icon128.png"
   },
   "permissions": [
-    "http://*.purdue.edu/"
+    "<all_urls>"
   ]
 }
