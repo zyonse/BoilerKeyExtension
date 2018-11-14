@@ -29,5 +29,5 @@ Download the signed extension from [GitHub Releases](https://github.com/bscholer
 ## Opera Installation Instructions
 Install instructions for Opera are not available, but feel free to fork, add them, and make a pull request!
 
-### Free Will Donation
+#### Free Will Donation
 [Vemno](https://venmo.com/bscholer)
