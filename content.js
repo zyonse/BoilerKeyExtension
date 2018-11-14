@@ -32,8 +32,8 @@ if (window.location.href.indexOf("https://www.purdue.edu/apps/account/cas/login"
             $("input[name='submit'][accesskey='s'][value='Login'][tabindex='3'][type='submit']").click();
             //Otherwise, just show the user the password they should use in an alert.
         } else if (pin && !username) {
-            alert("Password: " + pin + "," + hmacCode);
-            //Otherwise, just show the user the code they should use in an alert.
+            //Otherwise, just fill the password in for the user.
+            $("#password").val(pin + "," + hmacCode);
         } else {
             alert("2FA code: " + hmacCode);
         }
@@ -49,19 +49,75 @@ if (window.location.href.indexOf("https://www.purdue.edu/apps/account/cas/login"
     }
 }
 
-//A simple wrapper for localStorage.get(key)
-function get(key) {
-    if (localStorage.getItem(key)) {
-        let data = localStorage.getItem(key);
-        if (data) {
-            return data;
-        } else return null;
-    } else return null;
+//Collecting user-info, and setting up the new BoilerKey.
+function askForInfo() {
+    let code, pin, username, hotpSecret;
+    //Traps user until they enter a valid activation link, or code.
+    while (!code) {
+        let link = prompt("Setup steps:\n" +
+            "1) In a different browser, please navigate to your BoilerKey settings (https://purdue.edu/boilerkey), and click 'Set up a new Duo Mobile BoilerKey'.\n" +
+            "2) Follow the steps, enter PIN, and choose name for the new BoilerKey e.g. 'Laptop_Chrome', 'Desktop_Firefox'.\n" +
+            "3) Paste the link (https://m-1b9bef70.duosecurity.com/activate/XXXXXXXXXXXXXXXXXXXX) found under the QR code (required):");
+        code = validateLink(link);
+        if (!code) {
+            alert("Invalid link. Please try again");
+        }
+    }
+
+    hotpSecret = getActivationData(code);
+    console.log(hotpSecret);
+    //If activation was successful, save the hotp-secret and reset the counter.
+    if (hotpSecret) {
+        set("hotpSecret", hotpSecret);
+        set("counter", 0);
+        alert("Activation successful! Press OK to continue to setup auto-login.")
+    } else {
+        alert("Activation failed, please try again. A new BoilerKey will need to be created.");
+        location.reload();
+    }
+
+    username = prompt("For a fully automated login, please enter username (recommended):");
+
+    //Traps user until they either enter a valid pin/username, or no pin at all.
+    while (!pin || !(pin.match(/(\d{4})/) && pin.length === 4)) {
+        if (username) {
+            pin = prompt("To complete auto-login setup, please enter BoilerKey PIN (recommended):");
+        } else {
+            pin = prompt("To enable password auto-fill, please enter BoilerKey PIN (recommended):");
+        }
+        if (pin.match(/(\d{4})/) && pin.length === 4) {
+            if (username) {
+                alert("Auto-login has been set-up and enabled!");
+            } else {
+                alert("PIN,code will be auto-filled on each login!")
+            }
+        } else if (!pin) {
+            alert("No PIN set. A login code will be provided when you open this site.");
+        } else {
+            alert("Invalid PIN, please try again.");
+        }
+    }
+    //Save username/PIN if they exist.
+    if (username) {
+        set("username", username);
+    }
+    if (pin) {
+        set("pin", pin);
+    }
+    //Refresh the page to start auto-login.
+    location.reload();
 }
 
-//A simple wrapper for localStorage.set(key, value)
-function set(key, value) {
-    localStorage.setItem(key, value);
+//Simply validate the link the user enters, and return the code found at the end of it.
+function validateLink(link) {
+    if (link.indexOf("m-1b9bef70.duosecurity.com")) {
+        let chunks = link.split("/");
+        if (chunks[chunks.length - 1].length === 20) {
+            return chunks[chunks.length - 1];
+        } else return null;
+    } else if (link.length === 20) {
+        return link;
+    }
 }
 
 //The function that runs during setup, returning the hotp-secret needed to create auth keys from.
@@ -83,7 +139,6 @@ function getActivationData(code) {
         },
         error: function (data) {
             //Something went wrong. User should try to create a new BoilerKey
-            alert("Activation failed, please try again, and create another BoilerKey");
             console.log("ACTIVATION ERROR!");
             console.log(data);
             ret = null;
@@ -104,59 +159,17 @@ function generateHmacCode(hotpSecret) {
     return hmacCode;
 }
 
-//Collecting user-info, and setting up the new BoilerKey.
-function askForInfo() {
-    let code, pin, username, hotpSecret;
-    //Traps user until they enter a valid activation link, or code.
-    while (!code) {
-        let link = prompt("Note: This process will have to be repeated on additional computers, and the traditional pin,push combo will still work normally.\n" +
-            "Setup steps:\n" +
-            "1) In a different browser, please navigate to your BoilerKey settings (https://purdue.edu/boilerkey), and click 'Set up a new Duo Mobile BoilerKey'.\n" +
-            "2) Follow the steps, enter PIN, and choose name for the new BoilerKey e.g. 'Chrome', 'Firefox'\n" +
-            "3) Paste the link (https://m-1b9bef70.duosecurity.com/activate/XXXXXXXXXXXXXXXXXXXX) found under the QR code (required):");
-        code = validateLink(link);
-        if (!code) {
-            alert("Invalid link. Please try again");
-        }
-    }
-    //Traps user until they either enter a valid pin/username, or no pin at all.
-    while (!pin || !(pin.match(/(\d{4})/) && pin.length === 4)) {
-        pin = prompt("For a fully automated login, please enter BoilerKey PIN (recommended):");
-        if (pin.match(/(\d{4})/) && pin.length === 4) {
-            username = prompt("To complete automatic login, please enter username (recommended):");
-        } else if (!pin) {
-            alert("No PIN set. A login code will be provided when you open this site.");
-        } else {
-            alert("Invalid PIN, please try again.");
-        }
-    }
-    //Save username/PIN if they exist.
-    if (username) {
-        set("username", username);
-    }
-    if (pin) {
-        set("pin", pin);
-    }
-    hotpSecret = getActivationData(code);
-    console.log(hotpSecret);
-    //If activation was successful, save the hotp-secret and reset the counter.
-    if (hotpSecret) {
-        set("hotpSecret", hotpSecret);
-        set("counter", 0);
-    }
-    if (get("hotpSecret")) {
-        location.reload();
-    }
+//A simple wrapper for localStorage.get(key) with a bit of error handling.
+function get(key) {
+    if (localStorage.getItem(key)) {
+        let data = localStorage.getItem(key);
+        if (data) {
+            return data;
+        } else return null;
+    } else return null;
 }
 
-//Simply validate the link the user enters, and return the code found at the end of it.
-function validateLink(link) {
-    if (link.indexOf("m-1b9bef70.duosecurity.com")) {
-        let chunks = link.split("/");
-        if (chunks[chunks.length - 1].length === 20) {
-            return chunks[chunks.length - 1];
-        } else return null;
-    } else if (link.length === 20) {
-        return link;
-    }
+//A simple wrapper for localStorage.set(key, value)
+function set(key, value) {
+    localStorage.setItem(key, value);
 }
