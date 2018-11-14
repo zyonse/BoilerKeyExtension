@@ -26,6 +26,6 @@
     "default_icon": "icons/icon128.png"
   },
   "permissions": [
-    "<all_urls>"
+    "https://api-1b9bef70.duosecurity.com/"
   ]
 }
