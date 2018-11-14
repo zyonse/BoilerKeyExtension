@@ -10,6 +10,11 @@ This is a Chrome/Firefox/Opera extension that circumvents BoilerKey. The code is
 6. Navigate to the [Blackboard login page](https://mycourses.purdue.edu), and follow the instructions in the dialogs.
 
 ### Firefox Installation Instructions
+
+#### Install from Firefox Add-ons
+https://addons.mozilla.org/en-US/firefox/addon/boilerkey-helper/
+
+#### Install from Source
 1. Clone the extension.
 2. Navigate to about:debugging in Mozilla Firefox.
 3. Click "Load Temporary Add-on".
