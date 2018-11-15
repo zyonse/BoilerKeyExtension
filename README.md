@@ -31,3 +31,5 @@ Install instructions for Opera are not available, but feel free to fork, add the
 
 #### Free Will Donation
 [Vemno](https://venmo.com/bscholer)
+
+To see how bad BoilerKey really is, read [this article](https://www.purdueexponent.org/campus/article_9835af07-3c1c-579f-937f-200093767267.html) published by the Exponent, Purude's newspaper.
