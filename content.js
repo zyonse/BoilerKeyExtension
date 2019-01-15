@@ -1,14 +1,14 @@
 /*
  * @author Ben Scholer <benscholer3248511@gmail.com>
  *
- * A Chrome Extension that authenticates through Purdue's CAS automatically,
+ * A Chrome/Firefox Extension that authenticates through Purdue's CAS automatically,
  * alleviating BoilerKey for the device it's installed on.
  */
 
 //Click on the "Purdue Account Login" button
 if (window.location.href.indexOf("https://mycourses.purdue.edu") !== -1) {
-    $("tr.purdue-btn-top-row").click();
-    document.getElementsByClassName("tr.purdue-btn-top-row").click();
+    document.getElementsByClassName("purdue-btn-top-row")[0].click();
+    
 }
 
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
