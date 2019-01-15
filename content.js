@@ -8,6 +8,7 @@
 //Click on the "Purdue Account Login" button
 if (window.location.href.indexOf("https://mycourses.purdue.edu") !== -1) {
     $("tr.purdue-btn-top-row").click();
+    document.getElementsByClassName("tr.purdue-btn-top-row").click();
 }
 
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
@@ -25,15 +26,15 @@ if (window.location.href.indexOf("https://www.purdue.edu/apps/account/cas/login"
         //If we have the username/pin, log the user in automatically.
         if (username && pin) {
             //Auto-fill username field
-            $("#username").val(username);
+            document.getElementById("username").value = username;
             //Auto-fill password field
-            $("#password").val(pin + "," + hmacCode);
+            document.getElementById("password").value = (pin + "," + hmacCode);
             //Find the login button, and click it.
-            $("input[name='submit'][accesskey='s'][value='Login'][tabindex='3'][type='submit']").click();
+            document.querySelectorAll("input[name='submit'][accesskey='s'][value='Login'][tabindex='3'][type='submit']")[0].click();
             //Otherwise, just show the user the password they should use in an alert.
         } else if (pin && !username) {
             //Otherwise, just fill the password in for the user.
-            $("#password").val(pin + "," + hmacCode);
+            document.getElementById("password").value = pin + "," + hmacCode;
         } else {
             alert("2FA code: " + hmacCode);
         }
