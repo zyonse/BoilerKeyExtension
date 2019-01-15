@@ -123,27 +123,30 @@ function validateLink(link) {
 //The function that runs during setup, returning the hotp-secret needed to create auth keys from.
 function getActivationData(code) {
     let ret;
-    //Making DUO think that we're activating from the Android DUO Mobile app, running on a Google Pixel.
-    $.ajax({
-        type: "POST",
-        url: 'https://api-1b9bef70.duosecurity.com/push/v2/activation/' + code + '?app_id=com.duosecurity.duomobile.app.DMApplication' +
-            '&app_version=2.3.3&app_build_number=323206&full_disk_encryption=false&manufacturer=Google&model=Pixel&' +
-            'platform=Android&jailbroken=false&version=6.0&language=EN&customer_protocol=1',
-        dataType: "text",
-        async: false,
-        success: function (data) {
-            //If successful, save the hotp-secret (the only thing we really care about) to be returned.
-            data = JSON.parse(data);
-            ret = data.response["hotp_secret"];
-            console.log(data);
-        },
-        error: function (data) {
-            //Something went wrong. User should try to create a new BoilerKey
+    //Making DUO think that we're activating from the Android DUO Mobile app, running on a Google Pixel
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", 'https://api-1b9bef70.duosecurity.com/push/v2/activation/' + 
+        code + '?app_id=com.duosecurity.duomobile.app.DMApplication' +
+        '&app_version=2.3.3&app_build_number=323206&full_disk_encryption=false&manufacturer=Google&model=Pixel&' +
+        'platform=Android&jailbroken=false&version=6.0&language=EN&customer_protocol=1', false);
+    xhr.responseType = "text";
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');    
+    xhr.onload = function() {
+        console.log("XHR:" + xhr.status);
+        if (xhr.status == 200) {
+            console.log("SUCCESS");
+            var response = xhr.response; 
+            var parsed = JSON.parse(response);
+            ret = parsed.response["hotp_secret"];
+            console.log(response);
+        }
+        else {
             console.log("ACTIVATION ERROR!");
-            console.log(data);
             ret = null;
         }
-    });
+    };
+    xhr.send();
+
     return ret;
 }
 
