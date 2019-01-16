@@ -6,13 +6,13 @@
  */
 
 //Click on the "Purdue Account Login" button
-if (window.location.href.indexOf("https://mycourses.purdue.edu") !== -1) {
+if (window.location.href.startsWith("https://mycourses.purdue.edu") == true) {
     document.getElementsByClassName("purdue-btn-top-row")[0].click();
     
 }
 
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
-if (window.location.href.indexOf("https://www.purdue.edu/apps/account/cas/login") !== -1) {
+if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/login") == true) {
     //Retrieve everything from localStorage.
     let pin, code, hotpSecret, username;
     pin = get("pin");
@@ -111,7 +111,7 @@ function askForInfo() {
 
 //Simply validate the link the user enters, and return the code found at the end of it.
 function validateLink(link) {
-    if (link.indexOf("m-1b9bef70.duosecurity.com")) {
+    if (link.startsWith("https://m-1b9bef70.duosecurity.com/activate/")) {
         let chunks = link.split("/");
         if (chunks[chunks.length - 1].length === 20) {
             return chunks[chunks.length - 1];
