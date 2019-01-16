@@ -3,7 +3,7 @@
   "name": "BoilerKey Helper",
   "description": "An extension that alleviates Purdue's BoilerKey two-factor authentication.",
   "author": "Ben Scholer",
-  "version": "1.5",
+  "version": "1.6",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
