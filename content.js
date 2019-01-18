@@ -9,43 +9,52 @@
 if (window.location.href.indexOf("https://mycourses.purdue.edu") !== -1) {
     $("tr.purdue-btn-top-row").click();
 }
+execute();
 
+function execute() {
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
-if (window.location.href.indexOf("https://www.purdue.edu/apps/account/cas/login") !== -1) {
-    //Retrieve everything from localStorage.
-    let pin, code, hotpSecret, username;
-    pin = get("pin");
-    code = get("code");
-    hotpSecret = get("hotpSecret");
-    username = get("username");
-
-    //If the browser has been activated, go through the login process.
-    if (hotpSecret) {
-        hmacCode = generateHmacCode(hotpSecret);
-        //If we have the username/pin, log the user in automatically.
-        if (username && pin) {
-            //Auto-fill username field
-            $("#username").val(username);
-            //Auto-fill password field
-            $("#password").val(pin + "," + hmacCode);
-            //Find the login button, and click it.
-            $("input[name='submit'][accesskey='s'][value='Login'][tabindex='3'][type='submit']").click();
-            //Otherwise, just show the user the password they should use in an alert.
-        } else if (pin && !username) {
-            //Otherwise, just fill the password in for the user.
-            $("#password").val(pin + "," + hmacCode);
-        } else {
-            alert("2FA code: " + hmacCode);
+    if (window.location.href.indexOf("https://www.purdue.edu/apps/account/cas/login") !== -1) {
+        //Retrieve everything from localStorage.
+        let pin, code, hotpSecret, username, reset;
+        pin = get("pin");
+        code = get("code");
+        hotpSecret = get("hotpSecret");
+        username = get("username");
+        reset = get("reset");
+        //If we are resetting, just return and let the reset script do it's thing.
+        if (reset === "true") {
+            set("reset", "false");
+            return;
         }
-    } else {
-        //If we don't have activation data, remove the info currently stored, as it needs to be replaced.
-        localStorage.removeItem("pin");
-        localStorage.removeItem("code");
-        localStorage.removeItem("username");
-        localStorage.removeItem("count");
-        localStorage.removeItem("hotpSecret");
-        //Get the user's info to setup a new BoilerKey
-        askForInfo();
+
+        //If the browser has been activated, go through the login process.
+        if (hotpSecret) {
+            hmacCode = generateHmacCode(hotpSecret);
+            //If we have the username/pin, log the user in automatically.
+            if (username && pin) {
+                //Auto-fill username field
+                $("#username").val(username);
+                //Auto-fill password field
+                $("#password").val(pin + "," + hmacCode);
+                //Find the login button, and click it.
+                $("input[name='submit'][accesskey='s'][value='Login'][tabindex='3'][type='submit']").click();
+                //Otherwise, just show the user the password they should use in an alert.
+            } else if (pin && !username) {
+                //Otherwise, just fill the password in for the user.
+                $("#password").val(pin + "," + hmacCode);
+            } else {
+                alert("2FA code: " + hmacCode);
+            }
+        } else {
+            //If we don't have activation data, remove the info currently stored, as it needs to be replaced.
+            localStorage.removeItem("pin");
+            localStorage.removeItem("code");
+            localStorage.removeItem("username");
+            localStorage.removeItem("count");
+            localStorage.removeItem("hotpSecret");
+            //Get the user's info to setup a new BoilerKey
+            askForInfo();
+        }
     }
 }
 
@@ -172,4 +181,13 @@ function get(key) {
 //A simple wrapper for localStorage.set(key, value)
 function set(key, value) {
     localStorage.setItem(key, value);
+}
+
+function sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds){
+            break;
+        }
+    }
 }
