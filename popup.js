@@ -2,14 +2,8 @@ var resetButton = document.getElementById("reset_button");
 resetButton.addEventListener("click", reset);
 
 function reset() {
-    let url = "https://www.purdue.edu/apps/account/cas/login";
+    let url = "https://www.purdue.edu/apps/account/cas/login?reset=true";
     let win = window.open(url, '_blank');
-
-    localStorage.removeItem("pin");
-    localStorage.removeItem("code");
-    localStorage.removeItem("hotpSecret");
-    localStorage.removeItem("username");
-    location.reload();
 
 // // creates a new exception type:
 //     function FatalError() {

@@ -6,15 +6,23 @@
  */
 
 //Click on the "Purdue Account Login" button
-if (window.location.href.startsWith("https://mycourses.purdue.edu") == true) {
+if (window.location.href.startsWith("https://mycourses.purdue.edu") === true) {
     document.getElementsByClassName("purdue-btn-top-row")[0].click();
-    
-}
-execute();
 
-function execute() {
+}
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
-if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/login") == true) {
+if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/login") === true) {
+    let url = new URL(window.location.href);
+    let reset = url.searchParams.get("reset");
+    if (reset === "true") {
+        alert("Reset time!");
+        localStorage.removeItem("pin");
+        localStorage.removeItem("code");
+        localStorage.removeItem("hotpSecret");
+        localStorage.removeItem("username");
+        window.close();
+    }
+
     //Retrieve everything from localStorage.
     let pin, code, hotpSecret, username;
     pin = get("pin");
@@ -126,22 +134,21 @@ function getActivationData(code) {
     let ret;
     //Making DUO think that we're activating from the Android DUO Mobile app, running on a Google Pixel
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", 'https://api-1b9bef70.duosecurity.com/push/v2/activation/' + 
+    xhr.open("POST", 'https://api-1b9bef70.duosecurity.com/push/v2/activation/' +
         code + '?app_id=com.duosecurity.duomobile.app.DMApplication' +
         '&app_version=2.3.3&app_build_number=323206&full_disk_encryption=false&manufacturer=Google&model=Pixel&' +
         'platform=Android&jailbroken=false&version=6.0&language=EN&customer_protocol=1', false);
     xhr.responseType = "text";
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');    
-    xhr.onload = function() {
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function () {
         console.log("XHR:" + xhr.status);
         if (xhr.status == 200) {
             console.log("SUCCESS");
-            var response = xhr.response; 
+            var response = xhr.response;
             var parsed = JSON.parse(response);
             ret = parsed.response["hotp_secret"];
             console.log(response);
-        }
-        else {
+        } else {
             console.log("ACTIVATION ERROR!");
             ret = null;
         }
@@ -181,7 +188,7 @@ function set(key, value) {
 function sleep(milliseconds) {
     var start = new Date().getTime();
     for (var i = 0; i < 1e7; i++) {
-        if ((new Date().getTime() - start) > milliseconds){
+        if ((new Date().getTime() - start) > milliseconds) {
             break;
         }
     }
