@@ -3,6 +3,9 @@ This is a Chrome/Firefox/Opera extension that circumvents BoilerKey. The code is
 
 ## Chrome Installation Instructions
 
+#### Install from Chrome Web Store
+[BoilerKey Helper - Chrome Web Store](https://chrome.google.com/webstore/detail/boilerkey-helper/infadhgmajhpaoejgbennpkjnobdbkij)
+
 #### Install signed extension
 Download the signed extension from [GitHub Releases](https://github.com/nalderto/BoilerKeyExtension/releases/).
 
