@@ -20,6 +20,7 @@ if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/log
         localStorage.removeItem("code");
         localStorage.removeItem("hotpSecret");
         localStorage.removeItem("username");
+        localStorage.removeItem("counter");
         window.close();
     }
 
