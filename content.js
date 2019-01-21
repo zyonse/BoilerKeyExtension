@@ -8,7 +8,7 @@
 //Click on the "Purdue Account Login" button
 if (window.location.href.startsWith("https://mycourses.purdue.edu/webapps/login/") === true  
     && document.getElementsByClassName("purdue-btn-bottom-row")[0] != null) {
-    document.getElementsByClassName("purdue-btn-top-row")[0].click();
+    document.getElementsByClassName("purdue-btn-bottom-row")[0].click();
 }
 
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
