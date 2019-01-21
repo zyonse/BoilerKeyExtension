@@ -6,9 +6,9 @@
  */
 
 //Click on the "Purdue Account Login" button
-if (window.location.href.startsWith("https://mycourses.purdue.edu") === true) {
-    document.getElementsByClassName("purdue-btn-top-row")[0].click();
-
+if (window.location.href.startsWith("https://mycourses.purdue.edu/webapps/login/") === true  
+    && document.getElementsByClassName("purdue-btn-bottom-row")[0] != null) {
+    document.getElementsByClassName("purdue-btn-bottom-row")[0].click();
 }
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
 if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/login") === true) {
@@ -24,6 +24,8 @@ if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/log
         window.close();
     }
 
+//Make sure we're on Purdue's CAS, otherwise, don't do anything.
+if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/login") === true) {
     //Retrieve everything from localStorage.
     let pin, code, hotpSecret, username;
     pin = get("pin");
@@ -60,7 +62,7 @@ if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/log
 }
 
 //Collecting user-info, and setting up the new BoilerKey.
-function askForInfo() {
+async function askForInfo() {
     let code, pin, username, hotpSecret;
     //Traps user until they enter a valid activation link, or code.
     while (!code) {
@@ -74,7 +76,14 @@ function askForInfo() {
         }
     }
 
-    hotpSecret = getActivationData(code);
+    hotpSecret = await makeRequest("POST", 'https://api-1b9bef70.duosecurity.com/push/v2/activation/' + 
+    code + '?app_id=com.duosecurity.duomobile.app.DMApplication' +
+    '&app_version=2.3.3&app_build_number=323206&full_disk_encryption=false&manufacturer=Google&model=Pixel&' +
+    'platform=Android&jailbroken=false&version=6.0&language=EN&customer_protocol=1');
+    
+    hotpSecret = JSON.parse(hotpSecret);
+    hotpSecret = hotpSecret.response["hotp_secret"];
+
     console.log(hotpSecret);
     //If activation was successful, save the hotp-secret and reset the counter.
     if (hotpSecret) {
@@ -120,7 +129,7 @@ function askForInfo() {
 
 //Simply validate the link the user enters, and return the code found at the end of it.
 function validateLink(link) {
-    if (link.startsWith("https://m-1b9bef70.duosecurity.com/activate/")) {
+    if (link != null && link.startsWith("https://m-1b9bef70.duosecurity.com/activate/")) {
         let chunks = link.split("/");
         if (chunks[chunks.length - 1].length === 20) {
             return chunks[chunks.length - 1];
@@ -130,33 +139,28 @@ function validateLink(link) {
     }
 }
 
-//The function that runs during setup, returning the hotp-secret needed to create auth keys from.
-function getActivationData(code) {
-    let ret;
-    //Making DUO think that we're activating from the Android DUO Mobile app, running on a Google Pixel
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", 'https://api-1b9bef70.duosecurity.com/push/v2/activation/' +
-        code + '?app_id=com.duosecurity.duomobile.app.DMApplication' +
-        '&app_version=2.3.3&app_build_number=323206&full_disk_encryption=false&manufacturer=Google&model=Pixel&' +
-        'platform=Android&jailbroken=false&version=6.0&language=EN&customer_protocol=1', false);
-    xhr.responseType = "text";
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onload = function () {
-        console.log("XHR:" + xhr.status);
-        if (xhr.status == 200) {
-            console.log("SUCCESS");
-            var response = xhr.response;
-            var parsed = JSON.parse(response);
-            ret = parsed.response["hotp_secret"];
-            console.log(response);
-        } else {
-            console.log("ACTIVATION ERROR!");
-            ret = null;
-        }
-    };
-    xhr.send();
-
-    return ret;
+function makeRequest(method, url) {
+    return new Promise(function (resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        xhr.open(method, url);
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+            }
+        };
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        };
+        xhr.send();
+    });
 }
 
 //Generating the HMAC code using the jsOTP library with our hotp-secret and counter.
