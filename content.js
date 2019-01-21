@@ -7,9 +7,10 @@
 
 //Click on the "Purdue Account Login" button
 if (window.location.href.startsWith("https://mycourses.purdue.edu/webapps/login/") === true  
-    && document.getElementsByClassName("purdue-btn-bottom-row")[0] != null) {
+    && document.getElementsByClassName("purdue-btn-bottom-row")[0] !== null) {
     document.getElementsByClassName("purdue-btn-bottom-row")[0].click();
 }
+
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
 if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/login") === true) {
     let url = new URL(window.location.href);
@@ -23,6 +24,7 @@ if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/log
         localStorage.removeItem("counter");
         window.close();
     }
+}
 
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
 if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/login") === true) {
@@ -188,13 +190,4 @@ function get(key) {
 //A simple wrapper for localStorage.set(key, value)
 function set(key, value) {
     localStorage.setItem(key, value);
-}
-
-function sleep(milliseconds) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-        if ((new Date().getTime() - start) > milliseconds) {
-            break;
-        }
-    }
 }
