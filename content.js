@@ -7,7 +7,9 @@
 
 //Click on the "Purdue Account Login" button
 if (window.location.href.startsWith("https://mycourses.purdue.edu/") === true
-    && document.getElementsByClassName("purdue-btn-bottom-row")[0] !== null) {
+    && document.getElementsByClassName("purdue-btn-bottom-row")[0] !== null
+    && document.getElementsByClassName("purdue-btn-bottom-row")[0] !== undefined) {
+
     document.getElementsByClassName("purdue-btn-bottom-row")[0].click();
 }
 
