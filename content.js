@@ -6,7 +6,7 @@
  */
 
 //Click on the "Purdue Account Login" button
-if (window.location.href.startsWith("https://mycourses.purdue.edu/webapps/login/") === true  
+if (window.location.href.startsWith("https://mycourses.purdue.edu/webapps/login/") === true
     && document.getElementsByClassName("purdue-btn-bottom-row")[0] !== null) {
     document.getElementsByClassName("purdue-btn-bottom-row")[0].click();
 }
@@ -60,6 +60,15 @@ if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/log
             //Get the user's info to setup a new BoilerKey
             askForInfo();
         }
+    } else {
+        //If we don't have activation data, remove the info currently stored, as it needs to be replaced.
+        localStorage.removeItem("pin");
+        localStorage.removeItem("code");
+        localStorage.removeItem("username");
+        localStorage.removeItem("count");
+        localStorage.removeItem("hotpSecret");
+        //Get the user's info to setup a new BoilerKey
+        askForInfo();
     }
 }
 
@@ -78,11 +87,11 @@ async function askForInfo() {
         }
     }
 
-    hotpSecret = await makeRequest("POST", 'https://api-1b9bef70.duosecurity.com/push/v2/activation/' + 
-    code + '?app_id=com.duosecurity.duomobile.app.DMApplication' +
-    '&app_version=2.3.3&app_build_number=323206&full_disk_encryption=false&manufacturer=Google&model=Pixel&' +
-    'platform=Android&jailbroken=false&version=6.0&language=EN&customer_protocol=1');
-    
+    hotpSecret = await makeRequest("POST", 'https://api-1b9bef70.duosecurity.com/push/v2/activation/' +
+        code + '?app_id=com.duosecurity.duomobile.app.DMApplication' +
+        '&app_version=2.3.3&app_build_number=323206&full_disk_encryption=false&manufacturer=Google&model=Pixel&' +
+        'platform=Android&jailbroken=false&version=6.0&language=EN&customer_protocol=1');
+
     hotpSecret = JSON.parse(hotpSecret);
     hotpSecret = hotpSecret.response["hotp_secret"];
 
