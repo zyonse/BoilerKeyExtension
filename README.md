@@ -6,7 +6,7 @@ This is a Chrome/Firefox/Opera extension that circumvents BoilerKey. The code is
 ### FIX FOR CHROME 72+
 Due to Google testing out something experimental in Chrome 72, the setup process doesn't work. To disable it, go to:
 chrome://flags/#network-service
-in the URL bar, and then select disabled for the Enable Network Service option, and relaunch Chrome. This should fix it!
+in the URL bar, and then select **Disabled** for the 'Enable Network Service' option, and relaunch Chrome. This should fix it!
 We're currently working on a fix to this issue.
 
 #### Install from Chrome Web Store
