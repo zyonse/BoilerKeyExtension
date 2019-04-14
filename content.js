@@ -83,61 +83,72 @@ async function askForInfo() {
             "1) In a different browser, please navigate to your BoilerKey settings (https://purdue.edu/boilerkey), and click 'Set up a new Duo Mobile BoilerKey'.\n" +
             "2) Follow the steps, enter PIN, and choose name for the new BoilerKey e.g. 'Laptop_Chrome', 'Desktop_Firefox'.\n" +
             "3) Paste the link (https://m-1b9bef70.duosecurity.com/activate/XXXXXXXXXXXXXXXXXXXX) found under the QR code (required):");
-        code = validateLink(link);
+        code = validateLink(link.trim());
         if (!code) {
             alert("Invalid link. Please try again");
         }
     }
 
-    hotpSecret = await makeRequest("POST", 'https://api-1b9bef70.duosecurity.com/push/v2/activation/' +
-        code + '?app_id=com.duosecurity.duomobile.app.DMApplication' +
-        '&app_version=2.3.3&app_build_number=323206&full_disk_encryption=false&manufacturer=Google&model=Pixel&' +
-        'platform=Android&jailbroken=false&version=6.0&language=EN&customer_protocol=1');
+    try {
+        hotpSecret = await makeRequest("POST", 'https://api-1b9bef70.duosecurity.com/push/v2/activation/' +
+            code + '?app_id=com.duosecurity.duomobile.app.DMApplication' +
+            '&app_version=2.3.3&app_build_number=323206&full_disk_encryption=false&manufacturer=Google&model=Pixel&' +
+            'platform=Android&jailbroken=false&version=6.0&language=EN&customer_protocol=1');
 
-    hotpSecret = JSON.parse(hotpSecret);
-    hotpSecret = hotpSecret.response["hotp_secret"];
+        hotpSecret = JSON.parse(hotpSecret);
+        hotpSecret = hotpSecret.response["hotp_secret"];
 
-    console.log(hotpSecret);
-    //If activation was successful, save the hotp-secret and reset the counter.
-    if (hotpSecret) {
-        set("hotpSecret", hotpSecret);
-        set("counter", 0);
-        alert("Activation successful! Press OK to continue to setup auto-login.")
-    } else {
-        alert("Activation failed, please try again. A new BoilerKey will need to be created.");
+        //If activation was successful, save the hotp-secret and reset the counter.
+        if (hotpSecret) {
+            set("hotpSecret", hotpSecret);
+            set("counter", 0);
+            alert("Activation successful! Press OK to continue to setup auto-login.")
+        } else {
+            throw {
+                status: this.status,
+                statusText: xhr.statusText,
+                response: JSON.stringify({
+                    message: hotpSecret
+                })
+            }
+        }
+
+        username = prompt("For a fully automated login, please enter username (recommended):");
+
+        //Traps user until they either enter a valid pin/username, or no pin at all.
+        while (!pin || !(pin.match(/(\d{4})/) && pin.length === 4)) {
+            if (username) {
+                pin = prompt("To complete auto-login setup, please enter BoilerKey PIN (recommended):");
+            } else {
+                pin = prompt("To enable password auto-fill, please enter BoilerKey PIN (recommended):");
+            }
+            if (pin.match(/(\d{4})/) && pin.length === 4) {
+                if (username) {
+                    alert("Auto-login has been set-up and enabled!");
+                } else {
+                    alert("PIN,code will be auto-filled on each login!")
+                }
+            } else if (!pin) {
+                alert("No PIN set. A login code will be provided when you open this site.");
+            } else {
+                alert("Invalid PIN, please try again.");
+            }
+        }
+        //Save username/PIN if they exist.
+        if (username) {
+            set("username", username);
+        }
+        if (pin) {
+            set("pin", pin);
+        }
+        //Refresh the page to start auto-login.
+        location.reload();
+    } catch (e) {
+        // Catch error and print the error message
+        error = JSON.parse(e["response"]);
+        confirm("Activation failed, please try again. A new BoilerKey will need to be created. Error: " + error["message"]);
         location.reload();
     }
-
-    username = prompt("For a fully automated login, please enter username (recommended):");
-
-    //Traps user until they either enter a valid pin/username, or no pin at all.
-    while (!pin || !(pin.match(/(\d{4})/) && pin.length === 4)) {
-        if (username) {
-            pin = prompt("To complete auto-login setup, please enter BoilerKey PIN (recommended):");
-        } else {
-            pin = prompt("To enable password auto-fill, please enter BoilerKey PIN (recommended):");
-        }
-        if (pin.match(/(\d{4})/) && pin.length === 4) {
-            if (username) {
-                alert("Auto-login has been set-up and enabled!");
-            } else {
-                alert("PIN,code will be auto-filled on each login!")
-            }
-        } else if (!pin) {
-            alert("No PIN set. A login code will be provided when you open this site.");
-        } else {
-            alert("Invalid PIN, please try again.");
-        }
-    }
-    //Save username/PIN if they exist.
-    if (username) {
-        set("username", username);
-    }
-    if (pin) {
-        set("pin", pin);
-    }
-    //Refresh the page to start auto-login.
-    location.reload();
 }
 
 //Simply validate the link the user enters, and return the code found at the end of it.
@@ -162,7 +173,8 @@ function makeRequest(method, url) {
             } else {
                 reject({
                     status: this.status,
-                    statusText: xhr.statusText
+                    statusText: xhr.statusText,
+                    response: xhr.response
                 });
             }
         };
