@@ -145,8 +145,7 @@ async function askForInfo() {
         location.reload();
     } catch (e) {
         // Catch error and print the error message
-        error = JSON.parse(e["response"]);
-        confirm("Activation failed, please try again. A new BoilerKey will need to be created. Error: " + error["message"]);
+        confirm("Activation failed, please try again. A new BoilerKey will need to be created. Error: " + e["response"]);
         location.reload();
     }
 }
