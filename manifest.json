@@ -2,8 +2,8 @@
   "manifest_version": 2,
   "name": "BoilerKey Helper",
   "description": "An extension that alleviates Purdue's BoilerKey two-factor authentication.",
-  "author": "Ben Scholer",
-  "version": "1.7.3",
+  "author": "The Purdue Community",
+  "version": "1.8.1",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -12,19 +12,22 @@
   "content_scripts": [
     {
       "matches": [
-        "https://mycourses.purdue.edu/*",
+        "https://purdue.brightspace.com/*",
         "https://www.purdue.edu/apps/account/cas/*"
       ],
       "js": [
-        "jsOTP.min.js",
+        "jsOTP.js",
         "content.js"
-      ]
+      ],
+      "run_at": "document_end"
     }
   ],
+  "background": {
+    "scripts": ["background.js"]
+  },
   "browser_action": {
     "default_icon": "icons/icon128.png",
-    "default_title": "BoilerKey Helper",
-    "default_popup": "popup.html"
+    "default_title": "BoilerKey Helper"
   },
   "permissions": [
     "https://api-1b9bef70.duosecurity.com/"
