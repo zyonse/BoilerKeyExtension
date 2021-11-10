@@ -1,24 +1,33 @@
 # BoilerKey Extension
-This is a Chrome/Firefox/Opera extension that circumvents BoilerKey. The code is based heavily off of [u/elnardu](https://www.reddit.com/r/Purdue/comments/9ulfj2/local_boilerkey_script/)'s [Python script](https://github.com/elnardu/local-boilerkey).
+This is a Chrome/Edge/Firefox/Opera extension that circumvents BoilerKey. The code is based heavily off of this [Python script](https://github.com/elnardu/local-boilerkey) made by [u/elnardu](https://www.reddit.com/r/Purdue/comments/9ulfj2/local_boilerkey_script/).
 
-## Chrome Installation Instructions
+## Installation Instructions
+
+### Chrome and Edge
 
 #### Install from source
 1. Clone the extension.
-2. Navigate to chrome://extensions in Google Chrome.
+2. Navigate to chrome://extensions in Chrome, or edge://extensions in Edge.
 3. Enable Developer mode in the top right corner.
-4. Click "Load unpacked".
+4. Click "**Load unpacked**".
 5. Select the BoilerKeyExtension folder which you cloned.
 6. Navigate to the [Brightspace login page](https://purdue.brightspace.com/d2l/login), and follow the instructions in the dialogs.
 
-## Firefox Installation Instructions
+### Firefox
 
 #### Install signed extension
-Download the signed extension from [GitHub Releases](https://github.com/nalderto/BoilerKeyExtension/releases/).
+Download the signed extension from [GitHub Releases](https://github.com/bscholer/BoilerKeyExtension/releases/latest).
 
 #### Install from source
 1. Clone the extension.
 2. Navigate to about:debugging in Mozilla Firefox.
 3. Click "Load Temporary Add-on".
 4. Select the manifest.json file from the cloned folder.
-5. Navigate to the [Brightspace](https://purdue.brightspace.com/d2l/login), and follow the instructions in the dialogs.
+5. Navigate to the [Brightspace login page](https://purdue.brightspace.com/d2l/login), and follow the instructions in the dialogs.
+
+### Security Considerations
+This extension is less secure than using BoilerKey as intended. It stores a secret key in plain-text in your browser's local storage.
+
+However, chances are, if someone has enough access to your computer to steal these details, you have bigger issues on your hands.
+
+Use at your own risk!
