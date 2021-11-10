@@ -91,23 +91,25 @@ window.password_prompt = function (label_message, button_message, arg3, arg4, ar
 //Click on the "Purdue West Lafayette" button
 window.addEventListener("load", redirectCAS, false);
 
+let url = new URL(window.location.href);
+let reset = url.searchParams.get("reset") === "true";
+
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
 if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/login") === true) {
-    let url = new URL(window.location.href);
-    let reset = url.searchParams.get("reset");
-    if (reset === "true") {
-        alert("Reset time!");
-        localStorage.removeItem("pin");
-        localStorage.removeItem("code");
-        localStorage.removeItem("hotpSecret");
-        localStorage.removeItem("username");
-        localStorage.removeItem("counter");
+    if (reset) {
+        if (confirm("Are you sure you want to reset BoilerKey Helper?")) {
+            localStorage.removeItem("pin");
+            localStorage.removeItem("code");
+            localStorage.removeItem("hotpSecret");
+            localStorage.removeItem("username");
+            localStorage.removeItem("counter");
+        }
         window.close();
     }
 }
 
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
-if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/login") === true) {
+if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/login") && !reset) {
     //Retrieve everything from localStorage.
     let pin, code, hotpSecret, username;
     pin = get("pin");
