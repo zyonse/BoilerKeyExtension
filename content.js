@@ -127,19 +127,19 @@ if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/log
             //Auto-fill password field
             document.getElementById("password").value = (pin + "," + hmacCode);
             //Find the login button, and click it.
-            document.querySelectorAll("input[name='submit'][accesskey='s'][value='Login'][tabindex='3'][type='submit']")[0].click();
+            document.querySelectorAll("input[name='submit'][accesskey='s'][tabindex='3'][type='submit']")[0].click();
             //Otherwise, just show the user the password they should use in an alert.
         } else if (pin && !username) {
             //Otherwise, just fill the password in for the user.
             username = prompt("Please enter your username");
             document.getElementById("username").value = username;
             document.getElementById("password").value = pin + "," + hmacCode;
-            document.querySelectorAll("input[name='submit'][accesskey='s'][value='Login'][tabindex='3'][type='submit']")[0].click();
+            document.querySelectorAll("input[name='submit'][accesskey='s'][tabindex='3'][type='submit']")[0].click();
         } else if (username && !pin) {
             password_prompt("Please enter your PIN:", "Submit", function (pin) {
                 document.getElementById("password").value = (pin + "," + hmacCode);
                 document.getElementById("username").value = username;
-                document.querySelectorAll("input[name='submit'][accesskey='s'][value='Login'][tabindex='3'][type='submit']")[0].click();
+                document.querySelectorAll("input[name='submit'][accesskey='s'][tabindex='3'][type='submit']")[0].click();
             });
         } else {
             //If we don't have activation data, remove the info currently stored, as it needs to be replaced.
