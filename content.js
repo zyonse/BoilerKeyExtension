@@ -163,11 +163,14 @@ if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/log
     }
 }
 
+//Skip Brightspace campus selection screen
 function redirectCAS() {
-    if (window.location.href.startsWith("https://purdue.brightspace.com/") === true
-    && document.querySelector('[title="Purdue West Lafayette Login"]') !== null
-    && document.querySelector('[title="Purdue West Lafayette Login"]') !== undefined) {
-        document.querySelector('[title="Purdue West Lafayette Login"]').click();
+    if (window.location.href.startsWith("https://purdue.brightspace.com/d2l/login") === true) {
+        //Check if url contains "target" parameter, append to redirect if true
+        if (location.search.includes("target=")) {
+            target = "&target=" + location.search.split("target=")[1].split("&")[0]
+        } else target = "";
+        window.location.replace("https://purdue.brightspace.com/d2l/lp/auth/saml/initiate-login?entityId=https://idp.purdue.edu/idp/shibboleth" + target);
     }
 }
 
