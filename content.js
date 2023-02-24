@@ -88,8 +88,17 @@ window.password_prompt = function (label_message, button_message, arg3, arg4, ar
     setTimeout(function () { document.getElementById("password_prompt_input").focus(); }, 800);
 };
 
-//Click on the "Purdue West Lafayette" button
-window.addEventListener("load", redirectCAS, false);
+//Skip Brightspace campus selection screen
+if (window.location.href.startsWith("https://purdue.brightspace.com/d2l/login") === true) {
+    //Check to see if user manually logged out, proceed if false
+    if (window.location.href !== "https://purdue.brightspace.com/d2l/login?logout=1") {
+        //Check if url contains "target" parameter, append to redirect if true
+        if (location.search.includes("target=")) {
+            target = "&target=" + location.search.split("target=")[1].split("&")[0]
+        } else target = "";
+        window.location.replace("https://purdue.brightspace.com/d2l/lp/auth/saml/initiate-login?entityId=https://idp.purdue.edu/idp/shibboleth" + target);
+    }
+}
 
 let url = new URL(window.location.href);
 let reset = url.searchParams.get("reset") === "true";
@@ -160,14 +169,6 @@ if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/log
         localStorage.removeItem("hotpSecret");
         //Get the user's info to setup a new BoilerKey
         askForInfo();
-    }
-}
-
-function redirectCAS() {
-    if (window.location.href.startsWith("https://purdue.brightspace.com/") === true
-    && document.querySelector('[title="Purdue West Lafayette Login"]') !== null
-    && document.querySelector('[title="Purdue West Lafayette Login"]') !== undefined) {
-        document.querySelector('[title="Purdue West Lafayette Login"]').click();
     }
 }
 
