@@ -146,7 +146,7 @@ if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/log
             localStorage.removeItem("pin");
             localStorage.removeItem("code");
             localStorage.removeItem("username");
-            localStorage.removeItem("count");
+            localStorage.removeItem("counter");
             localStorage.removeItem("hotpSecret");
             //Get the user's info to setup a new BoilerKey
             askForInfo();
@@ -156,7 +156,7 @@ if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/log
         localStorage.removeItem("pin");
         localStorage.removeItem("code");
         localStorage.removeItem("username");
-        localStorage.removeItem("count");
+        localStorage.removeItem("counter");
         localStorage.removeItem("hotpSecret");
         //Get the user's info to setup a new BoilerKey
         askForInfo();
