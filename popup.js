@@ -1,3 +1,8 @@
+chrome.browserAction.setPopup({ popup: "setup.html" });
+if (localStorage.getItem(hotpSecret)) {
+    browser.browserAction.setPopup("setup.html");
+}
+console.log(TEST)
 var resetButton = document.getElementById("reset_button");
 resetButton.addEventListener("click", reset);
 
