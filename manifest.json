@@ -30,7 +30,7 @@
     "default_title": "BoilerKey Helper",
     "default_popup": "popup.html"
   },
-  "permissions": [
+  "host_permissions": [
     "https://api-1b9bef70.duosecurity.com/*"
   ]
 }
