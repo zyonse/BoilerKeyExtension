@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "BoilerKey Helper",
   "description": "An extension that alleviates Purdue's BoilerKey two-factor authentication.",
   "author": "The Purdue Community",
