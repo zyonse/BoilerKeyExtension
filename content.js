@@ -202,7 +202,7 @@ async function askForInfo() {
                 set("hotpSecret", hotpSecret.response["hotp_secret"]);
                 set("counter", 0);
                 alert("Activation successful! Press OK to continue to setup auto-login.")
-                username = prompt("For a fully automated login, please enter username (recommended):");
+                username = prompt("For a fully automated login, please enter username (recommended):").toLowerCase();
 
                 //Traps user until they either enter a valid pin/username, or no pin at all.
                 while (!pin || !(pin.match(/(\d{4})/) && pin.length === 4)) {
