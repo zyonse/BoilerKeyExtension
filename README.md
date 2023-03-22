@@ -1,5 +1,5 @@
 # BoilerKey Extension
-This is a Chrome/Edge/Firefox/Opera extension that circumvents BoilerKey. The code is based heavily off of this [Python script](https://github.com/elnardu/local-boilerkey) made by [u/elnardu](https://www.reddit.com/r/Purdue/comments/9ulfj2/local_boilerkey_script/).
+This is a Chrome/Edge/Firefox/Opera extension that automates BoilerKey. The code is based heavily off of this [Python script](https://github.com/elnardu/local-boilerkey) made by [u/elnardu](https://www.reddit.com/r/Purdue/comments/9ulfj2/local_boilerkey_script/).
 
 ## Downloads
 * **Chrome/Edge**: https://chrome.google.com/webstore/detail/boilerkey-helper/infadhgmajhpaoejgbennpkjnobdbkij
