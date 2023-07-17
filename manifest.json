@@ -13,7 +13,7 @@
     {
       "matches": [
         "https://purdue.brightspace.com/*",
-        "https://www.purdue.edu/apps/account/cas/*"
+        "https://sso.purdue.edu/idp/profile/SAML2/POST/*"
       ],
       "js": [
         "jsOTP.js",
@@ -30,6 +30,9 @@
     "default_title": "BoilerKey Helper",
     "default_popup": "popup.html"
   },
+  "permissions": [
+    "storage"
+  ],
   "host_permissions": [
     "https://api-1b9bef70.duosecurity.com/*"
   ]
