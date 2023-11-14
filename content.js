@@ -289,17 +289,15 @@ function generateHmacCode(hotpSecret) {
     return hmacCode;
 }
 
-//A simple wrapper for localStorage.get(key) with a bit of error handling.
+//A simple wrapper for chrome.storage.sync.get
 function get(key) {
-    if (localStorage.getItem(key)) {
-        let data = localStorage.getItem(key);
-        if (data) {
-            return data;
-        } else return null;
-    } else return null;
+    chrome.storage.sync.get(key, (result) => {
+        console.log("Value of " + key +  " is " + result[key]);
+        return result[key]
+    });
 }
 
-//A simple wrapper for localStorage.set(key, value)
+//A simple wrapper for chrome.storage.sync.set(key, value)
 function set(key, value) {
-    localStorage.setItem(key, value);
+    chrome.storage.sync.set({[key]: value});
 }
