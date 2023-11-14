@@ -127,15 +127,17 @@ if (window.location.href.startsWith("https://sso.purdue.edu/idp/profile/") && !r
         'username',
         'password'
     ], (login) => {
-        console.log(login.username, login.password)
         //If we have the username/password, log the user in automatically.
         if (login.username && login.password) {
-            //Auto-fill username field
-            document.getElementById("username").value = login.username;
-            //Auto-fill password field
-            document.getElementById("password").value = login.password;
-            //Find the login button, and click it.
-            document.querySelector("button[name='_eventId_proceed'][accesskey='s'][type='submit']").click();
+            //Make sure this is the first login attempt (prevent endless error loop)
+            if (document.querySelector("p[class='output-message output--error']") == null) {
+                //Auto-fill username field
+                document.getElementById("username").value = login.username;
+                //Auto-fill password field
+                document.getElementById("password").value = login.password;
+                //Find the login button, and click it.
+                document.querySelector("button[name='_eventId_proceed'][accesskey='s'][type='submit']").click();
+            }
         } else {
             //If we don't have login data, remove the info currently stored, as it needs to be replaced.
             chrome.storage.sync.clear()
