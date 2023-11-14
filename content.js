@@ -104,7 +104,7 @@ let url = new URL(window.location.href);
 let reset = url.searchParams.get("reset") === "true";
 
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
-if (window.location.href.startsWith("https://sso.purdue.edu/idp/profile/cas/login") === true) {
+if (window.location.href.startsWith("https://sso.purdue.edu/idp/profile/") === true) {
     if (reset) {
         if (confirm("Are you sure you want to reset BoilerKey Helper?")) {
             localStorage.removeItem("pin");
@@ -120,7 +120,7 @@ if (window.location.href.startsWith("https://sso.purdue.edu/idp/profile/cas/logi
 
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
 //Autofill username/password before proceeding to the Duo authentication page
-if (window.location.href.startsWith("https://sso.purdue.edu/idp/profile/cas/login") && !reset) {
+if (window.location.href.startsWith("https://sso.purdue.edu/idp/profile/") && !reset) {
     //Retrieve everything from storage.
     let password, username;
     chrome.storage.sync.get([
@@ -135,7 +135,7 @@ if (window.location.href.startsWith("https://sso.purdue.edu/idp/profile/cas/logi
             //Auto-fill password field
             document.getElementById("password").value = login.password;
             //Find the login button, and click it.
-            document.querySelectorAll("input[name='submit'][accesskey='s'][tabindex='3'][type='submit']")[0].click();
+            document.querySelector("button[name='_eventId_proceed'][accesskey='s'][type='submit']").click();
         } else {
             //If we don't have login data, remove the info currently stored, as it needs to be replaced.
             chrome.storage.sync.clear()

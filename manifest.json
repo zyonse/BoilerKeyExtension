@@ -13,7 +13,7 @@
     {
       "matches": [
         "https://purdue.brightspace.com/*",
-        "https://sso.purdue.edu/idp/profile/cas/login*"
+        "https://sso.purdue.edu/idp/profile/*"
       ],
       "js": [
         "jsOTP.js",
