@@ -179,8 +179,8 @@ async function loginSetup() {
 }
 
 //Collecting user-info, and setting up the new BoilerKey.
-async function askForInfo() {
-    let code, pin, username;
+async function duoSetup() {
+    let code;
     //Traps user until they enter a valid activation link, or code.
     while (!code) {
         let link = prompt("Setup steps:\n" +
@@ -193,13 +193,39 @@ async function askForInfo() {
         }
     }
 
-
+    // https://stackoverflow.com/a/55188241
+    let keys = await window.crypto.subtle.generateKey(
+        {
+            name: 'RSASSA-PKCS1-v1_5',
+            modulusLength: 2048,
+            publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+            hash: { name: 'SHA-256' },
+        },
+        false,
+        ['sign', 'verify'],
+    );
+    let pubKey = await window.crypto.subtle.exportKey('spki', keys.publicKey);
+    let pem = `-----BEGIN PUBLIC KEY-----\n${window.btoa(String.fromCharCode(...new Uint8Array(pubKey))).match(/.{1,64}/g).join('\n')}\n-----END PUBLIC KEY-----`;
+    console.log(pem);
 
     chrome.runtime.sendMessage({
-        method: 'POST', url: 'https://api-1b9bef70.duosecurity.com/push/v2/activation/' +
-            code + '?app_id=com.duosecurity.duomobile.app.DMApplication' +
-            '&app_version=3.37.1&app_build_number=326002&full_disk_encryption=false&manufacturer=Google&model=Pixel4&' +
-            'platform=Android&jailbroken=false&version=10.0&language=EN&customer_protocol=1'
+        method: 'POST',
+        url: 'https://api-1b9bef70.duosecurity.com/push/v2/activation/' + code,
+        headers: {
+            "app_id": "com.duosecurity.duomobile",
+            "app_version": "3.37.1",
+            "app_build_number": "326002",
+            "full_disk_encryption": "true",
+            "manufacturer": "Google",
+            "model": "Pixel4",
+            "platform": "Android",
+            "jailbroken": "false",
+            "version": "10.0",
+            "language": "EN",
+            "customer_protocol": "1",
+            "pubkey": pem,
+            "pkpush": "rsa-sha256"
+        }
     },
         function (hotpSecret) {
             console.log(hotpSecret);
