@@ -118,58 +118,63 @@ if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/log
 }
 
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
-if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/login") && !reset) {
-    //Retrieve everything from localStorage.
-    let pin, code, hotpSecret, username;
-    pin = get("pin");
-    code = get("code");
-    hotpSecret = get("hotpSecret");
-    username = get("username");
-
-    //If the browser has been activated, go through the login process.
-    if (hotpSecret) {
-        hmacCode = generateHmacCode(hotpSecret);
-        //If we have the username/pin, log the user in automatically.
-        if (username && pin) {
+//Autofill username/password before proceeding to the Duo authentication page
+if (window.location.href.startsWith("https://sso.purdue.edu/idp/profile/cas/login") && !reset) {
+    //Retrieve everything from storage.
+    let password, username;
+    chrome.storage.sync.get([
+        'username',
+        'password'
+    ], (login) => {
+        console.log(login.username, login.password)
+        //If we have the username/password, log the user in automatically.
+        if (login.username && login.password) {
             //Auto-fill username field
-            document.getElementById("username").value = username;
+            document.getElementById("username").value = login.username;
             //Auto-fill password field
-            document.getElementById("password").value = (pin + "," + hmacCode);
+            document.getElementById("password").value = login.password;
             //Find the login button, and click it.
             document.querySelectorAll("input[name='submit'][accesskey='s'][tabindex='3'][type='submit']")[0].click();
-            //Otherwise, just show the user the password they should use in an alert.
-        } else if (pin && !username) {
-            //Otherwise, just fill the password in for the user.
-            username = prompt("Please enter your username");
-            document.getElementById("username").value = username;
-            document.getElementById("password").value = pin + "," + hmacCode;
-            document.querySelectorAll("input[name='submit'][accesskey='s'][tabindex='3'][type='submit']")[0].click();
-        } else if (username && !pin) {
-            password_prompt("Please enter your PIN:", "Submit", function (pin) {
-                document.getElementById("password").value = (pin + "," + hmacCode);
-                document.getElementById("username").value = username;
-                document.querySelectorAll("input[name='submit'][accesskey='s'][tabindex='3'][type='submit']")[0].click();
-            });
         } else {
-            //If we don't have activation data, remove the info currently stored, as it needs to be replaced.
-            localStorage.removeItem("pin");
-            localStorage.removeItem("code");
-            localStorage.removeItem("username");
-            localStorage.removeItem("counter");
-            localStorage.removeItem("hotpSecret");
-            //Get the user's info to setup a new BoilerKey
-            askForInfo();
+            //If we don't have login data, remove the info currently stored, as it needs to be replaced.
+            chrome.storage.sync.clear()
+            //Get the user's info
+            loginSetup();
+        }
+    });
+}
+
+async function loginSetup() {
+    let username, password;
+    username = prompt("For a fully automated login, please enter username (recommended):").toLowerCase();
+
+    //Traps user until they either enter a valid password/username, or no password at all.
+    while (!password) {
+        if (username) {
+            password = prompt("To complete auto-login setup, please enter your Purdue password (recommended):");
+        } else {
+            password = prompt("To enable password auto-fill, please enter your Purdue password (recommended):");
+        }
+        if (password) {
+            if (username) {
+                alert("Auto-login has been set-up and enabled!");
+            } else {
+                alert("PIN,code will be auto-filled on each login!")
         }
     } else {
-        //If we don't have activation data, remove the info currently stored, as it needs to be replaced.
-        localStorage.removeItem("pin");
-        localStorage.removeItem("code");
-        localStorage.removeItem("username");
-        localStorage.removeItem("counter");
-        localStorage.removeItem("hotpSecret");
-        //Get the user's info to setup a new BoilerKey
-        askForInfo();
+            alert("No password set. A login code will be provided when you open this site.");
+            break;
+        }
     }
+    //Save username/PIN if they exist.
+    if (username) {
+        set("username", username);
+    }
+    if (password) {
+        set("password", password);
+    }
+    //Refresh the page to start auto-login.
+    location.reload();
 }
 
 //Collecting user-info, and setting up the new BoilerKey.
@@ -202,37 +207,6 @@ async function askForInfo() {
                 set("hotpSecret", hotpSecret.response["hotp_secret"]);
                 set("counter", 0);
                 alert("Activation successful! Press OK to continue to setup auto-login.")
-                username = prompt("For a fully automated login, please enter username (recommended):").toLowerCase();
-
-                //Traps user until they either enter a valid pin/username, or no pin at all.
-                while (!pin || !(pin.match(/(\d{4})/) && pin.length === 4)) {
-                    if (username) {
-                        pin = prompt("To complete auto-login setup, please enter BoilerKey PIN (recommended):");
-                    } else {
-                        pin = prompt("To enable password auto-fill, please enter BoilerKey PIN (recommended):");
-                    }
-                    if (pin.match(/(\d{4})/) && pin.length === 4) {
-                        if (username) {
-                            alert("Auto-login has been set-up and enabled!");
-                        } else {
-                            alert("PIN,code will be auto-filled on each login!")
-                        }
-                    } else if (!pin) {
-                        alert("No PIN set. A login code will be provided when you open this site.");
-                        break;
-                    } else {
-                        alert("Invalid PIN, please try again.");
-                    }
-                }
-                //Save username/PIN if they exist.
-                if (username) {
-                    set("username", username);
-                }
-                if (pin) {
-                    set("pin", pin);
-                }
-                //Refresh the page to start auto-login.
-                location.reload();
             } else {
                 alert("Activation failed, please try again. A new BoilerKey will need to be created.");
                 location.reload();
