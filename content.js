@@ -104,7 +104,7 @@ let url = new URL(window.location.href);
 let reset = url.searchParams.get("reset") === "true";
 
 //Make sure we're on Purdue's CAS, otherwise, don't do anything.
-if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/login") === true) {
+if (window.location.href.startsWith("https://sso.purdue.edu/idp/profile/cas/login") === true) {
     if (reset) {
         if (confirm("Are you sure you want to reset BoilerKey Helper?")) {
             localStorage.removeItem("pin");
@@ -112,6 +112,7 @@ if (window.location.href.startsWith("https://www.purdue.edu/apps/account/cas/log
             localStorage.removeItem("hotpSecret");
             localStorage.removeItem("username");
             localStorage.removeItem("counter");
+            chrome.storage.sync.clear()
         }
         window.close();
     }

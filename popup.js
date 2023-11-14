@@ -2,7 +2,7 @@ var resetButton = document.getElementById("reset_button");
 resetButton.addEventListener("click", reset);
 
 function reset() {
-    let url = "https://www.purdue.edu/apps/account/cas/login?reset=true";
+    let url = "https://sso.purdue.edu/idp/profile/cas/login?reset=true";
     let win = window.open(url, '_blank');
 
 // // creates a new exception type:
